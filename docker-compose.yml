@@ -1,0 +1,75 @@
+version: '3'
+services:
+
+  posts:
+    image: ms_blog_posts:latest
+    container_name: posts
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - APPNAME=posts
+      - EVENTBUSURL=http://eventbus
+
+  comments:
+    image: ms_blog_comments:latest
+    container_name: comments
+    ports:
+      - "4001:4001"
+    environment:
+      - PORT=4001
+      - APPNAME=comments
+      - EVENTBUSURL=http://eventbus
+
+  query:
+    image: ms_blog_query:latest
+    container_name: query
+    ports:
+      - "4002:4002"
+    environment:
+      - PORT=4002
+      - APPNAME=query
+      - EVENTBUSURL=http://eventbus
+
+  moderation:
+    image: ms_blog_moderation:latest
+    container_name: moderation
+    ports:
+      - "4003:4003"
+    environment:
+      - PORT=4003
+      - APPNAME=moderation
+      - EVENTBUSURL=http://eventbus
+
+  eventbus:
+    image: ms_blog_eventbus:latest
+    container_name: eventbus
+    ports:
+      - "4005:4005"
+    environment:
+      - PORT=4005
+      - APPNAME=event-bus
+      - COMMENTSURL=http://comments
+      - MODERATIONURL=http://moderation
+      - POSTSURL=http://posts
+      - QUERYURL=http://query
+
+  client:
+    image: ms_blog_client:latest
+    container_name: client
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - APPNAME=client
+      - COMMENTSURL=http://comments
+      - MODERATIONURL=http://moderation
+      - POSTSURL=http://posts
+      - QUERYURL=http://query
+      - EVENTBUSURL=http://eventbus
+    depends_on:
+      - posts
+      - comments
+      - query
+      - moderation
+      - eventbus

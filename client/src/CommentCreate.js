@@ -25,5 +25,7 @@ export default ({postId}) => {
             </div>
             <button className="btn btn-primary">Submit</button>
         </form>
-    </div>
+    </div>;
+
+    
 }
